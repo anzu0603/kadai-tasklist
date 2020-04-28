@@ -21,9 +21,15 @@ class TasksController extends Controller
         
         
     }
+    public function create()
+    {
+        $task= new Task;
 
+        return view('tasks.create', [
+            'task' => $task,
+        ]);
    
-
+}
    
 
     /**
@@ -34,12 +40,22 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-        $message = Message::find($id);
+        $task = Task::find($id);
 
         return view('tasks.show', [
             'task' => $task,
         ]);
     }
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -52,7 +68,7 @@ class TasksController extends Controller
          $task = Task::find($id);
 
         return view('tasks.edit', [
-            'task' => $message,
+            'task' => $task,
         ]);
     }
 
