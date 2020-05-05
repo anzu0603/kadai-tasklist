@@ -15,6 +15,8 @@ class TasksController extends Controller
     public function index()
     {
         $tasks = Task::all();
+        
+        
         return view('tasks.index', [
             'tasks' => $tasks,
         ]);
@@ -38,12 +40,15 @@ public function store(Request $request)
         $this->validate($request, [
             'status' => 'required|max:10',
             'content' => 'required|max:191',
+            
+            
         ]);
         
         
         $task = new Task;
         $task->status = $request->status;
         $task->content = $request->content;
+        $task->user_id = $request->user()->id;
         $task->save();
 
         return redirect('/');
@@ -80,6 +85,12 @@ public function store(Request $request)
         return view('tasks.edit', [
             'task' => $task,
         ]);
+        if (\Auth::id() === $task->user_id) {
+            $task->edit();
+        }
+
+        return redirect('/');
+        
     }
 
    public function update(Request $request, $id)
@@ -87,12 +98,18 @@ public function store(Request $request)
         $this->validate($request, [
             'status' => 'required|max:10',
             'content' => 'required|max:191',
-        ]);
-        
+          ]); 
         $task = Task::find($id);
         $task->status = $request->status; 
         $task->content = $request->content;
         $task->save();
+
+        if (\Auth::id() === $task->user_id) {
+            $task->update();
+        }
+
+        return redirect('/');
+
 
         return redirect('/');
     }
