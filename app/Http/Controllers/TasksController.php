@@ -91,12 +91,13 @@ public function store(Request $request)
     {
         $tasks = Task::find($id);
         if (\Auth::id() === $tasks->user_id) {
-        return view('tasks.show', [
-            'tasks' => $tasks,
-        ]);
-        return redirect('/login');
+            return view('tasks.show', [
+                'tasks' => $tasks,
+            ]);
+           
+        }
+         return redirect('/');
     }
-}
 
     /**
      * Show the form for editing the specified resource.
@@ -150,7 +151,7 @@ public function store(Request $request)
             $task->delete();
         }
 
-        return redirect('/login');
+        return redirect('/');
     }
    
    
