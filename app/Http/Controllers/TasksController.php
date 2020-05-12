@@ -14,25 +14,50 @@ class TasksController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all();
+        //ログインしていればその人のタスク一覧を表示する
+        
+       /* $tasks = Task::all();
+        
+         if (\Auth::check()) {
+             $user = \Auth::user();
+            return view('tasks.index', [
+            'tasks' => $tasks,]);*/
+            
+           $data = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $tasks = $user->tasklists()->orderBy('created_at', 'desc')->paginate(10);
+            
+            $data = [
+                'user' => $user,
+                'tasks' => $tasks,
+            ];
         
         
-        return view('tasks.index', [
-            'tasks' => $tasks,
-        ]);
+        return view('tasks.index', $data);
+    } 
+            
         
         
-    }
+        return redirect('/login');//ログインしていなければログインページにリダイレクトする
+    }  
+        
     
-    
+
+
+
     public function create()
     {
         $task= new Task;
-
+        if (\Auth::check()) {
+             $user = \Auth::user();
+       
         return view('tasks.create', [
             'task' => $task,
         ]);
-   
+       return redirect('/login');
+}
+
 }
    
 public function store(Request $request)
@@ -64,13 +89,14 @@ public function store(Request $request)
      */
     public function show($id)
     {
-        $task = Task::find($id);
-
+        $tasks = Task::find($id);
+        if (\Auth::id() === $tasks->user_id) {
         return view('tasks.show', [
-            'task' => $task,
+            'tasks' => $tasks,
         ]);
+        return redirect('/login');
     }
-
+}
 
     /**
      * Show the form for editing the specified resource.
@@ -81,15 +107,17 @@ public function store(Request $request)
     public function edit($id)
     {
          $task = Task::find($id);
-
+          if (\Auth::id() === $task->user_id) {  
+             
+        
         return view('tasks.edit', [
             'task' => $task,
         ]);
-        if (\Auth::id() === $task->user_id) {
+       
             $task->edit();
         }
 
-        return redirect('/');
+        return redirect('/login');
         
     }
 
@@ -111,7 +139,7 @@ public function store(Request $request)
         return redirect('/');
 
 
-        return redirect('/');
+       
     }
    
    public function destroy($id)
@@ -122,7 +150,7 @@ public function store(Request $request)
             $task->delete();
         }
 
-        return redirect('/');
+        return redirect('/login');
     }
    
    

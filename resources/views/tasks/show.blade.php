@@ -3,25 +3,25 @@
 @section('content')
 
 <!-- ここにページ毎のコンテンツを書く -->
-<h1>id = {{ $task->id }} のタスク詳細ページ</h1>
+<h1>id = {{ $tasks->id }} のタスク詳細ページ</h1>
 
     <table class="table table-bordered">
         <tr>
             <th>id</th>
-            <td>{{ $task->id }}</td>
+            <td>{{ $tasks->id }}</td>
         </tr>
         <tr>
             <th>タスク</th>
-            <td>{{ $task->content }}</td>
+            <td>{{ $tasks->content }}</td>
         </tr>
         <tr>
             <th>ステータス</th>
             
-            <td>{{ $task->status }}</td>
+            <td>{{ $tasks->status }}</td>
         </tr>
     </table>
-    {!! link_to_route('tasks.edit', 'このタスクを編集', ['id' => $task->id], ['class' => 'btn btn-light']) !!}
-     {!! Form::model($task, ['route' => ['tasks.destroy', $task->id], 'method' => 'delete']) !!}
+    {!! link_to_route('tasks.edit', 'このタスクを編集', ['id' => $tasks->id], ['class' => 'btn btn-light']) !!}
+     {!! Form::model($tasks, ['route' => ['tasks.destroy', $tasks->id], 'method' => 'delete']) !!}
         {!! Form::submit('削除', ['class' => 'btn btn-danger']) !!}
     {!! Form::close() !!}
     
